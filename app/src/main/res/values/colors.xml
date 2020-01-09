@@ -2,7 +2,6 @@
 <resources>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-
     <color name="fabColor1">#ffbbbb</color>
     <color name="black">#000000</color>
     <color name="near_black">#3b3b3b</color>

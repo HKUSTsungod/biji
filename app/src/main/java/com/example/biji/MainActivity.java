@@ -3,10 +3,13 @@ package com.example.biji;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -18,9 +21,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
@@ -55,12 +60,15 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     private RelativeLayout main;
     private WindowManager wm;
     private DisplayMetrics metrics;
+    private TextView setting_text;
+    private ImageView setting_image;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initPrefs();
         btn = (FloatingActionButton) findViewById(R.id.fab);
         lv = findViewById(R.id.lv);
 
@@ -113,12 +121,30 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         popupWindow = new PopupWindow(customView, (int) (width * 0.7), height, true);
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
 
+
         //在主界面加载成功之后 显示弹出
         findViewById(R.id.main_layout).post(new Runnable() {
             @Override
             public void run() {
                 popupCover.showAtLocation(main, Gravity.NO_GRAVITY, 0, 0);
                 popupWindow.showAtLocation(main, Gravity.NO_GRAVITY, 0, 0);
+
+                setting_image = customView.findViewById(R.id.setting_settings_image);
+                setting_text = customView.findViewById(R.id.setting_settings_text);
+
+                setting_image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(MainActivity.this, UserSettingsActivity.class));
+                    }
+                });
+
+                setting_text.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(MainActivity.this, UserSettingsActivity.class));
+                    }
+                });
 
                 coverView.setOnTouchListener(new View.OnTouchListener() {
                     @Override
@@ -139,6 +165,15 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
         });
 
+    }
+
+    public void initPrefs(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (!sharedPreferences.contains("nightMode")) {
+            editor.putBoolean("nightMode", false);
+            editor.commit();
+        }
     }
 
     // 接受startActivityForResult的结果
